@@ -30,6 +30,7 @@ namespace ToDoAPI
            
             services.AddControllers();
             services.AddSingleton<IUserRepository, UserRepository>();
+            services.AddSingleton<ITasksRepository, TasksRepository>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ToDoAPI", Version = "v1" });
