@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ToDoAPI.Entities;
 
 namespace ToDoAPI.Repositories
@@ -8,7 +7,7 @@ namespace ToDoAPI.Repositories
     {
         IEnumerable<User> GetUsers();
         User GetUserById(int id);
-        void AddUser(User u);
+        User AddUser(User u);
         bool UpdateUser(int id, User u);
         bool DeleteUser(int id);
         bool AddToDo(int id, ToDo t);
