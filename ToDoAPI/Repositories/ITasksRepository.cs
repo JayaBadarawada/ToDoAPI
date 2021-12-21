@@ -8,5 +8,7 @@ namespace ToDoAPI.Repositories
     {
         IEnumerable<ToDo> GetToDos();
         ToDo CreateToDo(ToDo t);
+        bool DeleteToDo(int id);
+
     }
 }

@@ -34,6 +34,21 @@ namespace ToDoAPI.Controllers
             _taskRepository.CreateToDo(t);
             return Ok();
         }
+
+
+        [HttpDelete("{id}")]
+        public ActionResult DeleteToDo(int id)
+        {
+           var todo = _taskRepository.DeleteToDo(id);
+            if (!todo)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok("Todo Successfully Deleted!");
+            }
+        }
     }
    
 }
