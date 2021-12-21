@@ -27,7 +27,7 @@ namespace ToDoAPI
 
             services.AddControllers();
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<ITasksRepository, TasksRepository>();
+           // services.AddScoped<ITasksRepository, TasksRepository>();
 
             services.AddSwaggerGen(c =>
             {

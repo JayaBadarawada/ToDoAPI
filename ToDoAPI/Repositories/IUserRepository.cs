@@ -10,7 +10,12 @@ namespace ToDoAPI.Repositories
         User AddUser(User u);
         bool UpdateUser(int id, User u);
         bool DeleteUser(int id);
-        bool AddToDo(int id, ToDo t);
         
-        }
+
+        // Tasks
+        IEnumerable<ToDo> GetToDos();
+        ToDo CreateToDo(ToDo t, int id);
+        bool DeleteToDo(ToDo t, int id);
+
+    }
 }

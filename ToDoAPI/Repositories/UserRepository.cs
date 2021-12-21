@@ -17,7 +17,8 @@ namespace ToDoAPI.Repositories
         public IEnumerable<User> GetUsers() => _context.Users.ToList();
 
 
-        public User GetUserById(int id) {
+        public User GetUserById(int id)
+        {
 
             var user = _context.Users
                            .Where(u => u.Id == id)
@@ -25,8 +26,8 @@ namespace ToDoAPI.Repositories
                            .FirstOrDefault();
             return user;
 
-        }  
-        
+        }
+
 
         public User AddUser(User u)
         {
@@ -50,6 +51,7 @@ namespace ToDoAPI.Repositories
                 return false;
             }
         }
+
         public bool DeleteUser(int id)
         {
             User user = _context.Users.FirstOrDefault(user => user.Id == id);
@@ -65,12 +67,32 @@ namespace ToDoAPI.Repositories
             }
         }
 
-        public bool AddToDo(int id, ToDo t)
+
+
+        //Tasks
+        public IEnumerable<ToDo> GetToDos() => _context.Tasks.ToList();
+
+        public ToDo CreateToDo(ToDo t, int id)
         {
-            User user = _context.Users.FirstOrDefault(user => user.Id == id);
+            User user = _context.Users.Where(u => u.Id == id).FirstOrDefault();
+            ToDo task = new() { Id = t.Id, Task = t.Task };
+
+            user.Todos.Add(task);
+            _context.SaveChangesAsync();
+
+            return task;
+        }
+
+        public bool DeleteToDo(ToDo t, int id)
+        {
+            User user = _context.Users.Where(u => u.Id == id).FirstOrDefault();
+            ToDo task = _context.Tasks.Where(task => task.Id == t.Id).FirstOrDefault();
+            
             if (user != null)
             {
-                user.Todos.Add(t);
+                // Delete task in user todos array and in database task tabel.
+                user.Todos.Remove(task);
+                _context.Tasks.Remove(task);
                 _context.SaveChangesAsync();
                 return true;
             }
@@ -78,8 +100,6 @@ namespace ToDoAPI.Repositories
             {
                 return false;
             }
-
         }
-
     }
 }

@@ -15,31 +15,31 @@ namespace ToDoAPI.Controllers
     {
 
 
-        public readonly ITasksRepository _taskRepository;
-        public ToDoSController(ITasksRepository taskRepository)
+        public readonly IUserRepository _userRepository;
+        public ToDoSController(IUserRepository userRepository)
         {
-            _taskRepository = taskRepository;
+            _userRepository = userRepository;
         }
 
         [HttpGet]
         public IActionResult GetToDoS()
         {
 
-            return Ok(_taskRepository.GetToDos());
+            return Ok(_userRepository.GetToDos());
         }
 
         [HttpPost("{id}")]
         public ActionResult CreateToDo(ToDo t, int id)
         {
-            _taskRepository.CreateToDo(t , id);
+            _userRepository.CreateToDo(t , id);
             return Ok();
         }
 
 
         [HttpDelete("{id}")]
-        public ActionResult DeleteToDo(int id)
+        public ActionResult DeleteToDo(ToDo t, int id)
         {
-           var todo = _taskRepository.DeleteToDo(id);
+           var todo = _userRepository.DeleteToDo(t, id);
             if (!todo)
             {
                 return NotFound();
