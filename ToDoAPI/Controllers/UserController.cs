@@ -76,21 +76,7 @@ namespace ToDoAPI.Controllers
             }
         }
 
-        [HttpPut]
-        [Route("ToDo/{id}")]
-        public ActionResult AddTask(int id, ToDo toDo)
-        {
-            var res = _userRepository.AddToDo(id, toDo);
-            if (res == true)
-            {
-                return Ok();
-            }
-            else
-            {
-                return NotFound();
-            }
-        }
-
+        
 
 
 

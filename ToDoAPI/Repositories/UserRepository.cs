@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using ToDoAPI.DataAccess;
 using ToDoAPI.Entities;
 
@@ -14,9 +15,17 @@ namespace ToDoAPI.Repositories
 
 
         public IEnumerable<User> GetUsers() => _context.Users.ToList();
-       
 
-        public User GetUserById(int id) =>  _context.Users.FirstOrDefault(user => user.Id == id);
+
+        public User GetUserById(int id) {
+
+            var user = _context.Users
+                           .Where(u => u.Id == id)
+                           .Include(u => u.Todos)
+                           .FirstOrDefault();
+            return user;
+
+        }  
         
 
         public User AddUser(User u)
@@ -29,7 +38,7 @@ namespace ToDoAPI.Repositories
 
         public bool UpdateUser(int id, User u)
         {
-            var user = _context.Users.FirstOrDefault(user => user.Id == id);
+            User user = _context.Users.FirstOrDefault(user => user.Id == id);
             if (user != null)
             {
                 user.Name = u.Name;
@@ -43,7 +52,7 @@ namespace ToDoAPI.Repositories
         }
         public bool DeleteUser(int id)
         {
-            var user = _context.Users.FirstOrDefault(user => user.Id == id);
+            User user = _context.Users.FirstOrDefault(user => user.Id == id);
             if (user != null)
             {
                 _context.Users.Remove(user);
@@ -58,7 +67,7 @@ namespace ToDoAPI.Repositories
 
         public bool AddToDo(int id, ToDo t)
         {
-            var user = _context.Users.FirstOrDefault(user => user.Id == id);
+            User user = _context.Users.FirstOrDefault(user => user.Id == id);
             if (user != null)
             {
                 user.Todos.Add(t);

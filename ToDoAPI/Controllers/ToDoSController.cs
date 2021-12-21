@@ -13,7 +13,7 @@ namespace ToDoAPI.Controllers
     [ApiController]
     public class ToDoSController : ControllerBase
     {
-      
+
 
         public readonly ITasksRepository _taskRepository;
         public ToDoSController(ITasksRepository taskRepository)
@@ -28,10 +28,10 @@ namespace ToDoAPI.Controllers
             return Ok(_taskRepository.GetToDos());
         }
 
-        [HttpPost]
-        public ActionResult CreateToDo(ToDo t)
+        [HttpPost("{id}")]
+        public ActionResult CreateToDo(ToDo t, int id)
         {
-            _taskRepository.CreateToDo(t);
+            _taskRepository.CreateToDo(t , id);
             return Ok();
         }
 
