@@ -1,41 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using ToDoAPI.DataAccess;
 using ToDoAPI.Entities;
 
 namespace ToDoAPI.Repositories
 {
-    public class UserRepository:IUserRepository
+    public class UserRepository : IUserRepository
     {
-        public readonly List<User> users = new List<User>()
-        {
-            new User(){Id=1,Name="User1"},
-             new User(){Id=2,Name="User2"},
-              new User(){Id=3,Name="User3"},
+
+        private readonly DataContext _context;
+        public UserRepository(DataContext context) { _context = context; }
 
 
-        };
-        public IEnumerable<User> GetUsers()
-        {
-            return users;
-        }
-        public User GetUserById(int id)
-        {
-            return users.FirstOrDefault(dog => dog.Id == id);
-        }
-        public void AddUser(User u)
-        {
-            var id = users.Last().Id;
-            var user = new User() { Id = (id + 1), Name = u.Name };
-            users.Add(user);
 
+        public IEnumerable<User> GetUsers() => _context.Users.ToList();
+       
+
+        public User GetUserById(int id) =>  _context.Users.FirstOrDefault(user => user.Id == id);
+        
+
+        public User AddUser(User u)
+        {
+            User user = new() { Id = u.Id, Name = u.Name };
+            _context.Users.Add(user);
+            _context.SaveChangesAsync();
+            return user;
         }
+
         public bool UpdateUser(int id, User u)
         {
-            var user = users.FirstOrDefault(user => user.Id == id);
+            var user = _context.Users.FirstOrDefault(user => user.Id == id);
             if (user != null)
             {
                 user.Name = u.Name;
+                _context.SaveChangesAsync();
                 return true;
             }
             else
@@ -45,10 +43,11 @@ namespace ToDoAPI.Repositories
         }
         public bool DeleteUser(int id)
         {
-            var user = users.FirstOrDefault(user => user.Id == id);
+            var user = _context.Users.FirstOrDefault(user => user.Id == id);
             if (user != null)
             {
-                users.Remove(user);
+                _context.Users.Remove(user);
+                _context.SaveChangesAsync();
                 return true;
             }
             else
@@ -57,12 +56,13 @@ namespace ToDoAPI.Repositories
             }
         }
 
-        public bool AddToDo(int id,ToDo t)
+        public bool AddToDo(int id, ToDo t)
         {
-            var user = users.FirstOrDefault(user => user.Id == id);
-            if (user !=null)
+            var user = _context.Users.FirstOrDefault(user => user.Id == id);
+            if (user != null)
             {
                 user.Todos.Add(t);
+                _context.SaveChangesAsync();
                 return true;
             }
             else
@@ -71,9 +71,6 @@ namespace ToDoAPI.Repositories
             }
 
         }
-
-
-
 
     }
 }

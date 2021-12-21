@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using ToDoAPI.DataAccess;
 using ToDoAPI.Entities;
 using ToDoAPI.Repositories;
 
@@ -16,16 +14,20 @@ namespace ToDoAPI.Controllers
     {
 
         public readonly IUserRepository _userRepository;
-        public UserController(IUserRepository userRepository)
+        public readonly DataContext _context;
+
+        public UserController(IUserRepository userRepository, DataContext context)
         {
             _userRepository = userRepository;
+            _context = context;
         }
         [HttpGet]
-       public IActionResult GetUsers()
+        public IActionResult GetUsers()
         {
-           
-            return Ok(_userRepository.GetUsers());
+
+            return Ok(_context.Users.ToList());
         }
+
         [HttpGet("{id}")]
         public ActionResult<User> GetUserById(int id)
         {
@@ -76,9 +78,9 @@ namespace ToDoAPI.Controllers
 
         [HttpPut]
         [Route("ToDo/{id}")]
-        public ActionResult AddTask(int id,ToDo toDo)
+        public ActionResult AddTask(int id, ToDo toDo)
         {
-            var res = _userRepository.AddToDo(id,toDo);
+            var res = _userRepository.AddToDo(id, toDo);
             if (res == true)
             {
                 return Ok();
