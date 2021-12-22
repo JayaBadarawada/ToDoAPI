@@ -20,7 +20,7 @@ namespace ToDoAPI.DataAccess
 
             modelBuilder.Entity<User>().HasData(new { Id = 1, Name = "Atlal" });
 
-            modelBuilder.Entity<ToDo>().HasData(new { Id = 1, Task = "sleep!!" });
+            modelBuilder.Entity<ToDo>().HasData(new { Id = 1, Task = "Sleep!" });
 
            
 

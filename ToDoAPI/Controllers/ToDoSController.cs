@@ -13,8 +13,6 @@ namespace ToDoAPI.Controllers
     [ApiController]
     public class ToDoSController : ControllerBase
     {
-
-
         public readonly ITasksRepository _taskRepository;
         public ToDoSController(ITasksRepository taskRepository)
         {
@@ -24,14 +22,24 @@ namespace ToDoAPI.Controllers
         [HttpGet]
         public IActionResult GetToDoS()
         {
-
             return Ok(_taskRepository.GetToDos());
         }
 
-        [HttpPost("{id}")]
-        public ActionResult CreateToDo(ToDo t, int id)
+        [HttpGet("{id}")]
+        public IActionResult GetTodosById(int id)
         {
-            _taskRepository.CreateToDo(t , id);
+            var todo = _taskRepository.GetTodoById(id);
+            if (todo == null)
+            {
+                return NotFound();
+            }
+            return Ok(todo);
+        }
+
+        [HttpPost("{userId}")]
+        public ActionResult CreateToDo(ToDo t, int userId)
+        {
+            _taskRepository.CreateToDo(t , userId);
             return Ok();
         }
 

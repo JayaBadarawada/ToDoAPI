@@ -7,7 +7,9 @@ namespace ToDoAPI.Repositories
     {
         IEnumerable<User> GetUsers();
         User GetUserById(int id);
-        User AddUser(User u);
+        List<ToDo> GetUserTodos(int userId);
+        ToDo GetUserTodoDetails(int userId, int id);
+        bool AddUser(User u);
         bool UpdateUser(int id, User u);
         bool DeleteUser(int id);
         // bool AddToDo(int id, ToDo t);

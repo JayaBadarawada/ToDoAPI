@@ -11,12 +11,10 @@ namespace ToDoAPI.Repositories
 
         private readonly DataContext _context;
         public UserRepository(DataContext context) { _context = context; }
-
-
-
-        public IEnumerable<User> GetUsers() => _context.Users.ToList();
-
-
+        public IEnumerable<User> GetUsers() 
+        {
+            return _context.Users.Include(u => u.Todos).ToList();
+        }
         public User GetUserById(int id) {
 
             var user = _context.Users
@@ -24,16 +22,37 @@ namespace ToDoAPI.Repositories
                            .Include(u => u.Todos)
                            .FirstOrDefault();
             return user;
-
         }  
         
+        public List<ToDo> GetUserTodos(int userId) 
+        {
+            var user = _context.Users.Where(u => u.Id == userId).Include(u => u.Todos).FirstOrDefault();
+            if (user == null)
+            {
+                return null;
+            }
+            return user.Todos;
+        }
 
-        public User AddUser(User u)
+        public ToDo GetUserTodoDetails(int userId, int id)
+        {
+            // MIGHT NOT BE OPTIMAL SINCE WE ARE QUARRYING THE WHOLE LIST OF TODOS INSTEAD OF THE ONE WE REALLY NEED
+            var user = _context.Users.Where(u => u.Id == userId).Include(u => u.Todos).FirstOrDefault();
+            foreach (var todo in user.Todos) 
+            {
+                if (todo.Id == id) {
+                    return todo;
+                }
+            }
+            return null;
+        }
+
+        public bool AddUser(User u)
         {
             User user = new() { Id = u.Id, Name = u.Name };
             _context.Users.Add(user);
             _context.SaveChangesAsync();
-            return user;
+            return true;
         }
 
         public bool UpdateUser(int id, User u)
@@ -113,6 +132,6 @@ namespace ToDoAPI.Repositories
 
         }
 
-
+        
     }
 }

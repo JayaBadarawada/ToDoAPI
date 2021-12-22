@@ -10,22 +10,18 @@ namespace ToDoAPI.Controllers
     [Route("[controller]")]
     [ApiController]
     public class UserController : ControllerBase
-
     {
-
         public readonly IUserRepository _userRepository;
-        public readonly DataContext _context;
-
-        public UserController(IUserRepository userRepository, DataContext context)
+        public UserController(IUserRepository userRepository)
         {
             _userRepository = userRepository;
-            _context = context;
         }
+
         [HttpGet]
         public IActionResult GetUsers()
         {
-
-            return Ok(_context.Users.ToList());
+            var users = _userRepository.GetUsers();
+            return Ok(users);
         }
 
         [HttpGet("{id}")]
@@ -42,13 +38,49 @@ namespace ToDoAPI.Controllers
             }
         }
 
-        [HttpPost]
-        public ActionResult AddUser(User u)
+        [HttpGet("{userId}/todos")]
+        public ActionResult<User> GetUserTodos(int userId)
         {
-            _userRepository.AddUser(u);
-            return Ok("User Successfully Created!");
+            var todos = _userRepository.GetUserTodos(userId);
+            if (todos == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(todos);
+            }
+        }
+
+        [HttpGet("{userId}/todos/{id}")]
+        public IActionResult GetUserTodoDetails(int userId, int id)
+        {
+            var todo = _userRepository.GetUserTodoDetails(userId, id);
+            if (todo == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(todo);
+            }
+        }
+
+        [HttpPost]
+        public IActionResult AddUser(User u)
+        {
+            var resp = _userRepository.AddUser(u);
+            if (!resp)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok("User Successfully Created!");
+            }
 
         }
+
         [HttpPut("{id}")]
         public ActionResult UpdateUser(int id, User u)
         {
@@ -62,6 +94,7 @@ namespace ToDoAPI.Controllers
                 return Ok("User Successfully Updated!");
             }
         }
+
         [HttpDelete("{id}")]
         public ActionResult DeleteUser(int id)
         {
@@ -75,11 +108,5 @@ namespace ToDoAPI.Controllers
                 return Ok("User Successfully Deleted!");
             }
         }
-
-        
-
-
-
     }
-
 }
